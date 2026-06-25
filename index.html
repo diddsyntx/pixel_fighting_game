@@ -1,0 +1,272 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, user-scalable=no"
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Pixelify+Sans:wght@400..700&display=swap"
+      rel="stylesheet"
+    />
+    <title>Game</title>
+    <style>
+      * {
+        box-sizing: border-box;
+        padding: 0;
+        margin: 0;
+      }
+      html,
+      body {
+        overflow: hidden;
+        background: #000;
+        width: 100%;
+        height: 100%;
+      }
+      canvas {
+        display: block;
+      }
+      #mobile-controls {
+        display: none;
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        height: 210px;
+        z-index: 100;
+        pointer-events: none;
+      }
+      .ctrl-left {
+        position: absolute;
+        left: 12px;
+        bottom: 12px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 6px;
+        pointer-events: all;
+      }
+      #pvcom-actions {
+        position: absolute;
+        right: 12px;
+        bottom: 12px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 8px;
+        pointer-events: all;
+      }
+      .ctrl-row {
+        display: flex;
+        gap: 6px;
+      }
+      .btn-ctrl {
+        width: 52px;
+        height: 52px;
+        border-radius: 50%;
+        border: 2px solid rgba(255, 255, 255, 0.3);
+        background: rgba(0, 0, 0, 0.5);
+        color: white;
+        font-size: 1.2rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        user-select: none;
+        -webkit-user-select: none;
+        -webkit-tap-highlight-color: transparent;
+        touch-action: manipulation;
+        cursor: pointer;
+        transition:
+          background 0.1s,
+          border-color 0.15s;
+      }
+      .btn-ctrl:active,
+      .btn-ctrl.pressed {
+        background: rgba(255, 255, 255, 0.25);
+      }
+      .btn-ctrl.attack {
+        width: 64px;
+        height: 64px;
+        background: rgba(200, 50, 50, 0.55);
+        border-color: rgba(255, 100, 100, 0.6);
+        font-size: 0.9rem;
+        font-family: "Pixelify Sans", monospace;
+        font-weight: bold;
+      }
+      .btn-ctrl.ultimate {
+        width: 64px;
+        height: 64px;
+        background: rgba(180, 100, 0, 0.6);
+        border-color: rgba(255, 180, 0, 0.8);
+        border-width: 2.5px;
+        font-size: 0.75rem;
+        font-family: "Pixelify Sans", monospace;
+        font-weight: bold;
+        color: #ffe066;
+        box-shadow: 0 0 10px rgba(255, 180, 0, 0.35);
+      }
+      .btn-ctrl.ultimate:active,
+      .btn-ctrl.ultimate.pressed {
+        background: rgba(255, 140, 0, 0.7);
+        box-shadow: 0 0 18px rgba(255, 180, 0, 0.7);
+      }
+      .btn-ctrl.block {
+        width: 56px;
+        height: 56px;
+        background: rgba(50, 110, 200, 0.5);
+        border-color: rgba(100, 170, 255, 0.5);
+        font-size: 0.78rem;
+        font-family: "Pixelify Sans", monospace;
+        font-weight: bold;
+      }
+      .player-label {
+        font-family: "Pixelify Sans", monospace;
+        font-size: 0.65rem;
+        color: rgba(255, 255, 255, 0.6);
+        letter-spacing: 1px;
+        text-transform: uppercase;
+        margin-bottom: 2px;
+        text-align: center;
+      }
+      @media (max-width: 1024px) {
+        #mobile-controls {
+          display: block;
+        }
+      }
+      @media (max-width: 480px) {
+        #mobile-controls {
+          height: 185px;
+        }
+        .btn-ctrl {
+          width: 44px;
+          height: 44px;
+          font-size: 1rem;
+        }
+        .btn-ctrl.attack {
+          width: 56px;
+          height: 56px;
+          font-size: 0.78rem;
+        }
+        .btn-ctrl.ultimate {
+          width: 56px;
+          height: 56px;
+          font-size: 0.66rem;
+        }
+        .btn-ctrl.block {
+          width: 50px;
+          height: 50px;
+          font-size: 0.66rem;
+        }
+        .player-label {
+          font-size: 0.58rem;
+        }
+        .ctrl-left {
+          left: 8px;
+          bottom: 8px;
+          gap: 4px;
+        }
+        #pvcom-actions {
+          right: 8px;
+          bottom: 8px;
+          gap: 4px;
+        }
+        .ctrl-row {
+          gap: 4px;
+        }
+      }
+      @media (orientation: portrait) and (max-width: 1024px) {
+        #mobile-controls {
+          height: 240px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <canvas id="mycanvas"></canvas>
+
+    <div id="mobile-controls">
+      <div class="ctrl-left">
+        <div class="player-label">Player</div>
+        <div class="btn-ctrl" id="btn-sam-up">↑</div>
+        <div class="ctrl-row">
+          <div class="btn-ctrl" id="btn-sam-left">←</div>
+          <div class="btn-ctrl" id="btn-sam-right">→</div>
+        </div>
+      </div>
+
+      <div id="pvcom-actions">
+        <div class="player-label">Actions</div>
+        <div class="ctrl-row">
+          <div class="btn-ctrl attack" id="btn-pvcom-attack">ATK</div>
+          <div class="btn-ctrl ultimate" id="btn-pvcom-ultimate">⚡ULT</div>
+          <div class="btn-ctrl block" id="btn-pvcom-block">BLOCK</div>
+        </div>
+      </div>
+    </div>
+
+    <script src="script.js"></script>
+
+    <script>
+      function simulateKey(code, type) {
+        const event = new KeyboardEvent(type, { code, bubbles: true });
+        document.dispatchEvent(event);
+      }
+
+      const pvcomBtnMap = {
+        "btn-sam-up": "KeyW",
+        "btn-sam-left": "KeyA",
+        "btn-sam-right": "KeyD",
+        "btn-pvcom-attack": "Space",
+        "btn-pvcom-ultimate": "KeyQ",
+        "btn-pvcom-block": "KeyS",
+      };
+
+      function bindBtn(id, code) {
+        const el = document.getElementById(id);
+        if (!el) return;
+
+        const press = () => {
+          el.classList.add("pressed");
+          simulateKey(code, "keydown");
+        };
+        const release = () => {
+          el.classList.remove("pressed");
+          simulateKey(code, "keyup");
+        };
+
+        el.addEventListener(
+          "touchstart",
+          (e) => {
+            e.preventDefault();
+            press();
+          },
+          { passive: false },
+        );
+        el.addEventListener(
+          "touchend",
+          (e) => {
+            e.preventDefault();
+            release();
+          },
+          { passive: false },
+        );
+        el.addEventListener(
+          "touchcancel",
+          (e) => {
+            e.preventDefault();
+            release();
+          },
+          { passive: false },
+        );
+        el.addEventListener("mousedown", press);
+        el.addEventListener("mouseup", release);
+        el.addEventListener("mouseleave", release);
+      }
+
+      Object.entries(pvcomBtnMap).forEach(([id, code]) => bindBtn(id, code));
+    </script>
+  </body>
+</html>
