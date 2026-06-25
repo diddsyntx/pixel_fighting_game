@@ -44,28 +44,44 @@
         left: 12px;
         bottom: 12px;
         display: flex;
-        flex-direction: column;
         align-items: center;
         gap: 6px;
         pointer-events: all;
       }
       #pvcom-actions {
         position: absolute;
-        right: 12px;
+        right: 14px;
         bottom: 12px;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        gap: 8px;
+        width: 200px;
+        height: 190px;
         pointer-events: all;
+      }
+      #pvcom-actions .btn-ctrl {
+        position: absolute;
+      }
+      #btn-pvcom-jump {
+        bottom: 130px;
+        right: 6px;
+      }
+      #btn-pvcom-ultimate {
+        bottom: 8px;
+        right: 120px;
+      }
+      #btn-pvcom-block {
+        bottom: 95px;
+        right: 80px;
+      }
+      #btn-pvcom-attack {
+        bottom: 8px;
+        right: 0px;
       }
       .ctrl-row {
         display: flex;
         gap: 6px;
       }
       .btn-ctrl {
-        width: 52px;
-        height: 52px;
+        width: 60px;
+        height: 60px;
         border-radius: 50%;
         border: 2px solid rgba(255, 255, 255, 0.3);
         background: rgba(0, 0, 0, 0.5);
@@ -88,8 +104,8 @@
         background: rgba(255, 255, 255, 0.25);
       }
       .btn-ctrl.attack {
-        width: 64px;
-        height: 64px;
+        width: 100px;
+        height: 100px;
         background: rgba(200, 50, 50, 0.55);
         border-color: rgba(255, 100, 100, 0.6);
         font-size: 0.9rem;
@@ -171,7 +187,24 @@
         #pvcom-actions {
           right: 8px;
           bottom: 8px;
-          gap: 4px;
+          width: 175px;
+          height: 165px;
+        }
+        #btn-pvcom-jump {
+          bottom: 110px;
+          right: 4px;
+        }
+        #btn-pvcom-ultimate {
+          bottom: 80px;
+          right: 68px;
+        }
+        #btn-pvcom-block {
+          bottom: 4px;
+          right: 78px;
+        }
+        #btn-pvcom-attack {
+          bottom: 4px;
+          right: 0px;
         }
         .ctrl-row {
           gap: 4px;
@@ -189,8 +222,6 @@
 
     <div id="mobile-controls">
       <div class="ctrl-left">
-        <div class="player-label">Player</div>
-        <div class="btn-ctrl" id="btn-sam-up">↑</div>
         <div class="ctrl-row">
           <div class="btn-ctrl" id="btn-sam-left">←</div>
           <div class="btn-ctrl" id="btn-sam-right">→</div>
@@ -198,12 +229,10 @@
       </div>
 
       <div id="pvcom-actions">
-        <div class="player-label">Actions</div>
-        <div class="ctrl-row">
-          <div class="btn-ctrl attack" id="btn-pvcom-attack">ATK</div>
-          <div class="btn-ctrl ultimate" id="btn-pvcom-ultimate">⚡ULT</div>
-          <div class="btn-ctrl block" id="btn-pvcom-block">BLOCK</div>
-        </div>
+        <div class="btn-ctrl" id="btn-pvcom-jump">↑</div>
+        <div class="btn-ctrl ultimate" id="btn-pvcom-ultimate">⚡ULT</div>
+        <div class="btn-ctrl block" id="btn-pvcom-block">BLOCK</div>
+        <div class="btn-ctrl attack" id="btn-pvcom-attack">ATK</div>
       </div>
     </div>
 
@@ -216,9 +245,9 @@
       }
 
       const pvcomBtnMap = {
-        "btn-sam-up": "KeyW",
         "btn-sam-left": "KeyA",
         "btn-sam-right": "KeyD",
+        "btn-pvcom-jump": "KeyW",
         "btn-pvcom-attack": "Space",
         "btn-pvcom-ultimate": "KeyQ",
         "btn-pvcom-block": "KeyS",
